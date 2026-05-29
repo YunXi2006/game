@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>詩仙回歸記</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="game-container">
+
+  <header class="game-header">
+    <h1 class="game-title">詩仙回歸記</h1>
+    <p class="game-subtitle">穿越千年的歸途</p>
+  </header>
+
+  <!-- 數值列 -->
+  <div class="stats-bar">
+    <div class="stat-item" id="stat-clue">
+      <div class="stat-label">線索數</div>
+      <div class="stat-value" id="val-clue">0</div>
+    </div>
+    <div class="stat-item" id="stat-sense">
+      <div class="stat-label">感官值</div>
+      <div class="stat-value" id="val-sense">0</div>
+    </div>
+    <div class="stat-item" id="stat-favor">
+      <div class="stat-label">好感度</div>
+      <div class="stat-value" id="val-favor">0</div>
+    </div>
+    <div class="stat-item" id="stat-timeleft">
+      <div class="stat-label">時限</div>
+      <div class="stat-value" id="val-timeleft">5</div>
+    </div>
+  </div>
+
+  <!-- 進度條 -->
+  <div class="progress-container">
+    <div class="progress-label">
+      <span id="progress-text">第一幕：侷促</span>
+      <span id="progress-percent">20%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:20%"></div>
+    </div>
+  </div>
+
+  <!-- 場景卡片 -->
+  <div class="scene-card" id="scene-card">
+    <div class="scene-act-label" id="scene-act"></div>
+    <h2 class="scene-title" id="scene-title"></h2>
+    <div class="scene-divider"></div>
+    <p class="scene-text" id="scene-text"></p>
+  </div>
+
+  <!-- 選項按鈕 -->
+  <div class="choices-container" id="choices-container"></div>
+
+  <!-- 道具欄 -->
+  <div class="inventory-container">
+    <div class="inventory-label">道具欄</div>
+    <div class="inventory-items" id="inventory-items"></div>
+  </div>
+
+</div>
+
+<!-- Toast 通知容器 -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="scenes.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
