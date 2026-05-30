@@ -494,6 +494,33 @@ body {
   box-shadow: 0 0 16px var(--gold-glow);
 }
 
+/* ── 靜音按鈕 ── */
+
+.game-header {
+  position: relative;
+}
+
+.mute-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.mute-btn:hover {
+  border-color: var(--gold-dark);
+  color: var(--gold);
+}
+
 /* ── 響應式 ── */
 
 @media (max-width: 500px) {

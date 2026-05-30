@@ -53,6 +53,131 @@ const ACHIEVEMENTS = [
   }
 ];
 
+/* ── 音效系統 ── */
+
+// 場景背景音樂對應（循環播放）
+const AUDIO_BG = {
+  scene_2lib_1:  'sound/圖書館 (1).m4a',
+  scene_2lib_2a: 'sound/圖書館 (1).m4a',
+  scene_2lib_2b: 'sound/圖書館 (1).m4a',
+  scene_2lib_3:  'sound/圖書館 (1).m4a',
+  scene_2lib_4a: 'sound/圖書館 (1).m4a',
+  scene_2lib_4b: 'sound/圖書館 (1).m4a',
+  scene_2lib_5:  'sound/圖書館 (1).m4a',
+  scene_3lib_1:  'sound/圖書館 (1).m4a',
+  scene_3lib_2a: 'sound/圖書館 (1).m4a',
+  scene_3lib_2b: 'sound/圖書館 (1).m4a',
+  scene_3lib_3:  'sound/圖書館 (1).m4a',
+  scene_2rest_1: 'sound/二餐音樂.m4a',
+  scene_2rest_2a:'sound/二餐音樂.m4a',
+  scene_2rest_2b:'sound/二餐音樂.m4a',
+  scene_2rest_3: 'sound/二餐音樂.m4a',
+  scene_2rest_4a:'sound/二餐音樂.m4a',
+  scene_2rest_4b:'sound/二餐音樂.m4a',
+  scene_2rest_5: 'sound/二餐音樂.m4a',
+  scene_3rest_1: 'sound/二餐音樂.m4a',
+  scene_3rest_2a:'sound/二餐音樂.m4a',
+  scene_3rest_2b:'sound/二餐音樂.m4a',
+  scene_3rest_3: 'sound/二餐音樂.m4a',
+};
+
+// 場景進入時的一次性音效
+const AUDIO_SFX = {
+  scene_1_1:    'sound/全家冰櫃.m4a',      // 第一次接觸現代世界
+  scene_1_3:    'sound/全家洋芋片.m4a',    // 撿起並翻看告示紙
+  scene_2lib_1: 'sound/圖書館.m4a',        // 踏入圖書館的瞬間
+  scene_2lib_3: 'sound/圖書館拿書放書.m4a',// 取出遺卷查看
+  scene_2lib_4a:'sound/圖書館椅子.m4a',   // 與女學生並坐
+  scene_2lib_4b:'sound/圖書館椅子.m4a',   // 與老先生對坐
+  scene_2rest_1:'sound/二餐一樓.m4a',     // 踏入餐廳的喧嚷
+  scene_2rest_3:'sound/餐廳交談聲.m4a',   // 竊聽學生談話
+  scene_2rest_4a:'sound/餐廳交談聲.m4a',  // 加入學生對話
+  scene_3lib_1: 'sound/圖書館拿書放書.m4a',// 取出舊地圖
+  scene_3lib_3: 'sound/圖書館電腦.m4a',   // 閉館時的電腦聲
+  scene_3rest_1:'sound/餐廳交談聲.m4a',   // 昏暗餐廳中的孤獨身影
+};
+
+const BG_VOL  = 0.3;
+const SFX_VOL = 0.55;
+
+let bgAudio     = null;   // 背景音樂 HTMLAudioElement
+let bgSrc       = '';     // 目前背景音樂路徑
+let sfxAudio    = null;   // 音效 HTMLAudioElement
+let bgFadeTimer = null;   // setInterval handle
+let audioEnabled = false; // 首次用戶互動後才啟用
+let audioMuted   = false;
+
+function enableAudio() {
+  audioEnabled = true;
+}
+
+function playSfx(src) {
+  if (!audioEnabled || audioMuted) return;
+  if (sfxAudio) { sfxAudio.pause(); sfxAudio = null; }
+  sfxAudio = new Audio(src);
+  sfxAudio.volume = SFX_VOL;
+  sfxAudio.play().catch(() => {});
+}
+
+function playBg(src) {
+  if (!src) { stopBg(); return; }
+  if (bgSrc === src && bgAudio && !bgAudio.paused) return; // 同一首不重播
+
+  fadeOutBg(() => {
+    bgSrc = src;
+    bgAudio = new Audio(src);
+    bgAudio.loop = true;
+    bgAudio.volume = 0;
+    bgAudio.muted = audioMuted;
+    if (!audioMuted) {
+      bgAudio.play().catch(() => {});
+      fadeInBg();
+    }
+  });
+}
+
+function stopBg() {
+  fadeOutBg(() => { bgSrc = ''; });
+}
+
+function fadeInBg() {
+  clearInterval(bgFadeTimer);
+  bgFadeTimer = setInterval(() => {
+    if (!bgAudio) { clearInterval(bgFadeTimer); return; }
+    bgAudio.volume = Math.min(BG_VOL, bgAudio.volume + 0.025);
+    if (bgAudio.volume >= BG_VOL) clearInterval(bgFadeTimer);
+  }, 50);
+}
+
+function fadeOutBg(callback) {
+  if (!bgAudio) { callback && callback(); return; }
+  clearInterval(bgFadeTimer);
+  const dying = bgAudio;
+  bgAudio = null;
+  bgFadeTimer = setInterval(() => {
+    dying.volume = Math.max(0, dying.volume - 0.04);
+    if (dying.volume <= 0) {
+      clearInterval(bgFadeTimer);
+      dying.pause();
+      callback && callback();
+    }
+  }, 50);
+}
+
+function updateAudio(sceneId) {
+  if (!audioEnabled) return;
+  playBg(AUDIO_BG[sceneId] || null);
+  const sfx = AUDIO_SFX[sceneId];
+  if (sfx) setTimeout(() => playSfx(sfx), 200); // 稍微延遲，配合場景淡入
+}
+
+function toggleMute() {
+  audioMuted = !audioMuted;
+  if (bgAudio)  bgAudio.muted  = audioMuted;
+  if (sfxAudio) sfxAudio.muted = audioMuted;
+  $('mute-btn').textContent = audioMuted ? '🔇' : '🔊';
+}
+
 /* ── 工具函數 ── */
 
 function $(id) { return document.getElementById(id); }
@@ -182,10 +307,14 @@ function renderScene(sceneId) {
   $('scene-title').textContent = scene.title || '';
   $('scene-text').textContent  = resolveText(sceneId, scene);
 
+  // 音效（在場景淡入後播放）
+  updateAudio(sceneId);
+
   const choicesEl = $('choices-container');
   choicesEl.innerHTML = '';
 
   if (scene.isEnding) {
+    stopBg();
     renderEndingPanel(choicesEl);
     return;
   }
@@ -196,6 +325,7 @@ function renderScene(sceneId) {
     btn.className = 'choice-btn';
     btn.textContent = choice.text;
     btn.addEventListener('click', () => {
+      enableAudio(); // 首次互動後解除瀏覽器自動播放限制
       applyEffects(choice.effects);
       goToScene(choice.next);
     });
@@ -278,6 +408,11 @@ function renderEndingPanel(container) {
 /* ── 重新開始 ── */
 
 function restartGame() {
+  // 停止所有音效
+  stopBg();
+  if (sfxAudio) { sfxAudio.pause(); sfxAudio = null; }
+  bgSrc = '';
+
   state.clue      = 0;
   state.sense     = 0;
   state.favor     = 0;
@@ -295,3 +430,5 @@ function restartGame() {
 updateStatsUI();
 updateInventoryUI();
 renderScene('scene_1_1');
+
+$('mute-btn').addEventListener('click', toggleMute);
