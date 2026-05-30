@@ -57,44 +57,44 @@ const ACHIEVEMENTS = [
 
 // 場景背景音樂對應（循環播放）
 const AUDIO_BG = {
-  scene_2lib_1:  'sound/圖書館 (1).m4a',
-  scene_2lib_2a: 'sound/圖書館 (1).m4a',
-  scene_2lib_2b: 'sound/圖書館 (1).m4a',
-  scene_2lib_3:  'sound/圖書館 (1).m4a',
-  scene_2lib_4a: 'sound/圖書館 (1).m4a',
-  scene_2lib_4b: 'sound/圖書館 (1).m4a',
-  scene_2lib_5:  'sound/圖書館 (1).m4a',
-  scene_3lib_1:  'sound/圖書館 (1).m4a',
-  scene_3lib_2a: 'sound/圖書館 (1).m4a',
-  scene_3lib_2b: 'sound/圖書館 (1).m4a',
-  scene_3lib_3:  'sound/圖書館 (1).m4a',
-  scene_2rest_1: 'sound/二餐音樂.m4a',
-  scene_2rest_2a:'sound/二餐音樂.m4a',
-  scene_2rest_2b:'sound/二餐音樂.m4a',
-  scene_2rest_3: 'sound/二餐音樂.m4a',
-  scene_2rest_4a:'sound/二餐音樂.m4a',
-  scene_2rest_4b:'sound/二餐音樂.m4a',
-  scene_2rest_5: 'sound/二餐音樂.m4a',
-  scene_3rest_1: 'sound/二餐音樂.m4a',
-  scene_3rest_2a:'sound/二餐音樂.m4a',
-  scene_3rest_2b:'sound/二餐音樂.m4a',
-  scene_3rest_3: 'sound/二餐音樂.m4a',
+  scene_2lib_1:  'sound/library-ambient.m4a',
+  scene_2lib_2a: 'sound/library-ambient.m4a',
+  scene_2lib_2b: 'sound/library-ambient.m4a',
+  scene_2lib_3:  'sound/library-ambient.m4a',
+  scene_2lib_4a: 'sound/library-ambient.m4a',
+  scene_2lib_4b: 'sound/library-ambient.m4a',
+  scene_2lib_5:  'sound/library-ambient.m4a',
+  scene_3lib_1:  'sound/library-ambient.m4a',
+  scene_3lib_2a: 'sound/library-ambient.m4a',
+  scene_3lib_2b: 'sound/library-ambient.m4a',
+  scene_3lib_3:  'sound/library-ambient.m4a',
+  scene_2rest_1: 'sound/cafeteria-music.m4a',
+  scene_2rest_2a:'sound/cafeteria-music.m4a',
+  scene_2rest_2b:'sound/cafeteria-music.m4a',
+  scene_2rest_3: 'sound/cafeteria-music.m4a',
+  scene_2rest_4a:'sound/cafeteria-music.m4a',
+  scene_2rest_4b:'sound/cafeteria-music.m4a',
+  scene_2rest_5: 'sound/cafeteria-music.m4a',
+  scene_3rest_1: 'sound/cafeteria-music.m4a',
+  scene_3rest_2a:'sound/cafeteria-music.m4a',
+  scene_3rest_2b:'sound/cafeteria-music.m4a',
+  scene_3rest_3: 'sound/cafeteria-music.m4a',
 };
 
 // 場景進入時的一次性音效
 const AUDIO_SFX = {
-  scene_1_1:    'sound/全家冰櫃.m4a',      // 第一次接觸現代世界
-  scene_1_3:    'sound/全家洋芋片.m4a',    // 撿起並翻看告示紙
-  scene_2lib_1: 'sound/圖書館.m4a',        // 踏入圖書館的瞬間
-  scene_2lib_3: 'sound/圖書館拿書放書.m4a',// 取出遺卷查看
-  scene_2lib_4a:'sound/圖書館椅子.m4a',   // 與女學生並坐
-  scene_2lib_4b:'sound/圖書館椅子.m4a',   // 與老先生對坐
-  scene_2rest_1:'sound/二餐一樓.m4a',     // 踏入餐廳的喧嚷
-  scene_2rest_3:'sound/餐廳交談聲.m4a',   // 竊聽學生談話
-  scene_2rest_4a:'sound/餐廳交談聲.m4a',  // 加入學生對話
-  scene_3lib_1: 'sound/圖書館拿書放書.m4a',// 取出舊地圖
-  scene_3lib_3: 'sound/圖書館電腦.m4a',   // 閉館時的電腦聲
-  scene_3rest_1:'sound/餐廳交談聲.m4a',   // 昏暗餐廳中的孤獨身影
+  scene_1_1:    'sound/convenience-fridge.m4a',  // 第一次接觸現代世界
+  scene_1_3:    'sound/convenience-chips.m4a',   // 撿起並翻看告示紙
+  scene_2lib_1: 'sound/library-enter.m4a',       // 踏入圖書館的瞬間
+  scene_2lib_3: 'sound/library-books.m4a',       // 取出遺卷查看
+  scene_2lib_4a:'sound/library-chair.m4a',       // 與女學生並坐
+  scene_2lib_4b:'sound/library-chair.m4a',       // 與老先生對坐
+  scene_2rest_1:'sound/cafeteria-floor1.m4a',    // 踏入餐廳的喧嚷
+  scene_2rest_3:'sound/cafeteria-chatter.m4a',   // 竊聽學生談話
+  scene_2rest_4a:'sound/cafeteria-chatter.m4a',  // 加入學生對話
+  scene_3lib_1: 'sound/library-books.m4a',       // 取出舊地圖
+  scene_3lib_3: 'sound/library-computer.m4a',    // 閉館時的電腦聲
+  scene_3rest_1:'sound/cafeteria-chatter.m4a',   // 昏暗餐廳中的孤獨身影
 };
 
 const BG_VOL  = 0.3;
