@@ -53,6 +53,96 @@ const ACHIEVEMENTS = [
   }
 ];
 
+/* ── 背景圖片系統 ── */
+
+const SCENE_IMAGE = {
+  scene_2lib_1:  'images/library-entrance.jpg',
+  scene_2lib_2a: 'images/library-shelves.jpg',
+  scene_2lib_2b: 'images/library-counter.jpg',
+  scene_2lib_3:  'images/library-reading-room.jpg',
+  scene_2lib_4a: 'images/library-reading-room2.jpg',
+  scene_2lib_4b: 'images/library-reading-room3.jpg',
+  scene_2lib_5:  'images/library-shelves2.jpg',
+  scene_2rest_1: 'images/cafeteria-counter.jpg',
+  scene_2rest_2a:'images/cafeteria-seating.jpg',
+  scene_2rest_2b:'images/cafeteria-seating.jpg',
+  scene_2rest_3: 'images/cafeteria-seating.jpg',
+  scene_2rest_4a:'images/cafeteria-counter2.jpg',
+  scene_2rest_4b:'images/cafeteria-seating.jpg',
+  scene_2rest_5: 'images/cafeteria-counter.jpg',
+  scene_3lib_1:  'images/library-reading-room4.jpg',
+  scene_3lib_2a: 'images/library-reading-room4.jpg',
+  scene_3lib_2b: 'images/library-reading-room4.jpg',
+  scene_3lib_3:  'images/library-computer.jpg',
+  scene_3rest_1: 'images/cafeteria-seating.jpg',
+  scene_3rest_2a:'images/cafeteria-seating.jpg',
+  scene_3rest_2b:'images/cafeteria-seating.jpg',
+  scene_3rest_3: 'images/cafeteria-counter.jpg',
+};
+
+let bgCurrent  = 'a';  // 目前顯示的是 bg-a 還是 bg-b
+let prevBgSrc  = null; // 避免相同圖片重複切換
+
+function updateBgImage(sceneId) {
+  const src = SCENE_IMAGE[sceneId] || null;
+  if (src === prevBgSrc) return; // 相同圖片不重複切換
+  prevBgSrc = src;
+
+  const next         = bgCurrent === 'a' ? 'b' : 'a';
+  const layerNext    = document.getElementById('bg-' + next);
+  const layerCurrent = document.getElementById('bg-' + bgCurrent);
+
+  if (!src) {
+    layerCurrent.classList.remove('active');
+    bgCurrent = next;
+    return;
+  }
+
+  const img = new Image();
+  img.onload = () => {
+    layerNext.style.backgroundImage = `url('${src}')`;
+    layerNext.classList.add('active');
+    layerCurrent.classList.remove('active');
+    bgCurrent = next;
+  };
+  img.src = src;
+}
+
+/* ── 場景展示（Reveal）系統 ── */
+
+const REVEAL_DURATION = 2800; // 毫秒，自動跳過時間
+let revealTimer  = null;
+const revealedActs = new Set(); // 記錄已展示過的幕次，每幕只展示一次
+
+function startReveal(sceneId, onDone) {
+  const overlay    = $('reveal-overlay');
+  const container  = document.querySelector('.game-container');
+  const scene      = SCENES[sceneId];
+
+  $('reveal-act').textContent   = ACT_NAMES[scene.act] || '';
+  $('reveal-title').textContent = scene.title || '';
+
+  container.classList.add('reveal-hidden');
+  overlay.classList.add('active');
+
+  function finish() {
+    if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
+    overlay.classList.remove('active');
+    overlay.removeEventListener('click', finish);
+    container.classList.remove('reveal-hidden');
+    onDone && onDone();
+  }
+
+  overlay.addEventListener('click', finish, { once: true });
+  revealTimer = setTimeout(finish, REVEAL_DURATION);
+}
+
+function cancelReveal() {
+  if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
+  $('reveal-overlay').classList.remove('active');
+  document.querySelector('.game-container').classList.remove('reveal-hidden');
+}
+
 /* ── 音效系統 ── */
 
 // 場景背景音樂對應（循環播放）
@@ -178,6 +268,33 @@ function toggleMute() {
   $('mute-btn').textContent = audioMuted ? '🔇' : '🔊';
 }
 
+/* ── 道具描述 ── */
+
+const ITEM_DESCRIPTIONS = {
+  '酒葫蘆':
+    '李白隨身攜帶的酒葫蘆，裝著來歷不明的陳年酒液，帶著穀物與山泉混合的氣息。啟動時輪陣時，需以此酒沿石縫緩緩灑下，方能以酒為媒，喚醒封存千年的陣法。',
+  '告示碎片':
+    '一張印有校園設施資訊的碎紙，其中一行讓李白停住了目光——「古典文獻閱覽室：本週展出孤本《太白遺卷》。」命運的線索，從這張無人在意的紙開始。',
+  '子時啟陣密語':
+    '從《太白遺卷》封底隱字辨認出的啟陣條件：「子時三更，月滿中庭，以詩換門，以酒啟陣。」子時、月圓、詩、酒——缺一不可。',
+  '時輪陣圖草稿':
+    '白髮老先生研究三十年的手繪草圖，描繪時輪陣的完整結構。啟動條件：古水之源、子時月滿、以詩共鳴、以酒為媒，且須由原作者親身引動氣場。',
+  '教授研究報告摘要':
+    '古典文學教授的田野調查節錄。確認清月井舊址位於校園東北角，唐代地下水脈殘存，現為石板廣場——正是啟動時輪陣所需的「古水之源」。',
+  '清月井路線':
+    '從圖書館至清月井的步行路線：出正門、沿東側走廊往北、過石橋、右轉至廣場盡頭。石板之下，千年前的水脈正靜靜等待。',
+};
+
+function openItemModal(itemName) {
+  $('item-modal-name').textContent = itemName;
+  $('item-modal-desc').textContent = ITEM_DESCRIPTIONS[itemName] || '（無詳細記載）';
+  $('item-modal').classList.add('active');
+}
+
+function closeItemModal() {
+  $('item-modal').classList.remove('active');
+}
+
 /* ── 工具函數 ── */
 
 function $(id) { return document.getElementById(id); }
@@ -227,6 +344,8 @@ function updateInventoryUI() {
     const div = document.createElement('div');
     div.className = 'inventory-item';
     div.textContent = item;
+    div.title = '點擊查看詳情';
+    div.addEventListener('click', () => openItemModal(item));
     container.appendChild(div);
   });
 }
@@ -307,6 +426,9 @@ function renderScene(sceneId) {
   $('scene-title').textContent = scene.title || '';
   $('scene-text').textContent  = resolveText(sceneId, scene);
 
+  // 背景圖片
+  updateBgImage(sceneId);
+
   // 音效（在場景淡入後播放）
   updateAudio(sceneId);
 
@@ -334,13 +456,27 @@ function renderScene(sceneId) {
 }
 
 function goToScene(sceneId) {
-  const card = $('scene-card');
+  const card   = $('scene-card');
+  const scene  = SCENES[sceneId];
+  const newSrc = SCENE_IMAGE[sceneId] || null;
+  // 每幕只展示一次：有背景圖且該幕從未展示過
+  const shouldReveal = newSrc !== null && !revealedActs.has(scene.act);
+
   card.classList.add('fade-out');
 
   setTimeout(() => {
     renderScene(sceneId);
-    card.classList.remove('fade-out');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (shouldReveal) {
+      revealedActs.add(scene.act);
+      startReveal(sceneId, () => {
+        card.classList.remove('fade-out');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    } else {
+      card.classList.remove('fade-out');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, 380);
 }
 
@@ -413,6 +549,14 @@ function restartGame() {
   if (sfxAudio) { sfxAudio.pause(); sfxAudio = null; }
   bgSrc = '';
 
+  // 清除背景圖片與展示狀態
+  cancelReveal();
+  revealedActs.clear();
+  document.getElementById('bg-a').classList.remove('active');
+  document.getElementById('bg-b').classList.remove('active');
+  bgCurrent = 'a';
+  prevBgSrc  = null;
+
   state.clue      = 0;
   state.sense     = 0;
   state.favor     = 0;
@@ -432,3 +576,9 @@ updateInventoryUI();
 renderScene('scene_1_1');
 
 $('mute-btn').addEventListener('click', toggleMute);
+
+// 道具彈窗：點 × 或點遮罩背景關閉
+$('item-modal-close').addEventListener('click', closeItemModal);
+$('item-modal').addEventListener('click', e => {
+  if (e.target === $('item-modal')) closeItemModal();
+});

@@ -8,6 +8,17 @@
 </head>
 <body>
 
+<!-- 全頁背景圖層（兩層交替用於淡入淡出） -->
+<div class="bg-layer" id="bg-a"></div>
+<div class="bg-layer" id="bg-b"></div>
+
+<!-- 場景展示遮罩（新背景出現時顯示幾秒） -->
+<div id="reveal-overlay">
+  <div id="reveal-act"></div>
+  <div id="reveal-title"></div>
+  <div id="reveal-hint">點擊繼續</div>
+</div>
+
 <div class="game-container">
 
   <header class="game-header">
@@ -64,6 +75,17 @@
     <div class="inventory-items" id="inventory-items"></div>
   </div>
 
+</div>
+
+<!-- 道具詳細資訊彈窗 -->
+<div id="item-modal" class="item-modal-overlay">
+  <div class="item-modal-card">
+    <div class="item-modal-header">
+      <span class="item-modal-name" id="item-modal-name"></span>
+      <button class="item-modal-close" id="item-modal-close">✕</button>
+    </div>
+    <p class="item-modal-desc" id="item-modal-desc"></p>
+  </div>
 </div>
 
 <!-- Toast 通知容器 -->
